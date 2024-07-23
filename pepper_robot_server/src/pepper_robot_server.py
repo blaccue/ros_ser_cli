@@ -100,13 +100,22 @@ class PepperRobotServer:
 
     def write_to_shm(self, data):
         # Write data to shared memory
-        self.shm.seek(0)
-        self.shm.write(struct.pack('d', data))
+        with self.lock:
+            try:
+                self.shm.seek(0)
+                self.shm.write(struct.pack('d', data))
+            except Exception as e:
+                rospy.logerr(f"Failed to write to shared memory: {e}")
 
     def read_from_shm(self):
         # Read data from shared memory
-        self.shm.seek(0)
-        return struct.unpack('d', self.shm.read(8))[0]
+        with self.lock:
+            try:
+                self.shm.seek(0)
+                return struct.unpack('d', self.shm.read(8))[0]
+            except Exception as e:
+                rospy.logerr(f"Failed to read from shared memory: {e}")
+                return None
 
     def move_arm(self):
         # Some arm movement
