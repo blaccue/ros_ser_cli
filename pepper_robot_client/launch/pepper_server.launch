@@ -1,0 +1,6 @@
+<launch>
+  <!-- Launch the Pepper Robot Client Node -->
+  <node name="pepper_robot_client" pkg="pepper_robot_client" type="pepper_robot_client.py" output="screen">
+      <param name="use_sim_time" value="true"/>
+  </node>
+</launch>
